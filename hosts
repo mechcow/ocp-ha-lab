@@ -55,7 +55,7 @@ oreg_auth_password='eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJhOTVjZDQxZmRlNGU0MmFiODMwYjA
 
 
 # For Operator Framework Images
-#openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'{{ redhat_registry_user }}','password':'{{ redhat_registry_password }}','test_image':'mongodb/enterprise-operator:0.3.2'}]
+openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'{{ oreg_auth_user }}','password':'{{ oreg_auth_password }}','test_image':'mongodb/enterprise-operator:0.3.2'}]
 
 openshift_examples_modify_imagestreams=true
 
@@ -103,15 +103,16 @@ os_sdn_network_plugin_name='redhat/openshift-ovs-subnet'
 
 # LDAP AND HTPASSWD Authentication (download ipa-ca.crt first)
 #openshift_master_identity_providers=
+openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider','attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'ca': '/etc/origin/master/ipa-ca.crt','insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'},{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 
-openshift_master_identity_providers=[{'name': 'lab_provider', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider', 'attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
+#openshift_master_identity_providers=[{'name': 'lab_provider', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider', 'attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
 openshift_master_ldap_ca_file=/root/ipa-ca.crt
 
 # Just LDAP
 #openshift_master_identity_providers=[{'name': 'ldap', 'challenge': 'true', 'login': 'true', 'kind': 'LDAPPasswordIdentityProvider','attributes': {'id': ['dn'], 'email': ['mail'], 'name': ['cn'], 'preferredUsername': ['uid']}, 'bindDN': 'uid=admin,cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com', 'bindPassword': 'r3dh4t1!', 'ca': '/etc/origin/master/ipa-ca.crt','insecure': 'false', 'url': 'ldaps://ipa.shared.example.opentlc.com:636/cn=users,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com?uid?sub?(memberOf=cn=ocp-users,cn=groups,cn=accounts,dc=shared,dc=example,dc=opentlc,dc=com)'}]
 
 # Just HTPASSWD
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 
 # LDAP and HTPASSWD dependencies
 
@@ -201,6 +202,8 @@ openshift_logging_kibana_nodeselector={"node-role.kubernetes.io/infra": "true"}
 openshift_logging_curator_nodeselector={"node-role.kubernetes.io/infra": "true"}
 openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra": "true"}
 openshift_logging_eventrouter_nodeselector={"node-role.kubernetes.io/infra": "true"}
+
+logging_elasticsearch_rollout_override=true
 
 ###########################################################################
 ### OpenShift Router and Registry Vars
